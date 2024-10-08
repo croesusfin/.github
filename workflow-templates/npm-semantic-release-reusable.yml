@@ -1,0 +1,44 @@
+name: Semantic Release
+run-name: Releasing on ${{ github.ref_name }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - [ $default-branch ]
+  workflow_dispatch:
+    inputs:
+      preRelease:
+        description: 'Pre-Release'
+        required: false
+        default: false
+        type: boolean
+      bump-maj-ver-tag:
+        description: 'Create or update a major version tag'
+        required: false
+        default: true
+        type: boolean
+      dry-run:
+        description: 'Dry Run'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  exe-npm-sem-rel-action:
+    name: Execute Semantic Release Workflow
+    uses: croesusfin/npm-semantic-release-action/.github/workflows/npm-semantic-release.yaml@v1
+    with:
+      target-repository-to-update: ${{ github.repository }}
+      target-sha-to-use-for-update: ${{ github.sha }}
+      target-ref-to-use-for-update: ${{ github.ref }}
+      target-config-file: release.config.js
+      preRelease: ${{ inputs.preRelease || false }}
+      dry-run: ${{ inputs.dry-run || false }}
+      bump-major-version-tag: ${{ inputs.bump-maj-ver-tag || true }}
+    secrets:
+      semantic-release-access-token: ${{ secrets.SEMANTIC_RELEASE_ACCESS_TOKEN }}
+      write-croesusfin-token: ${{ secrets.WRITE_CROESUSFIN_TOKEN }}

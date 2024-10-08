@@ -1,0 +1,10 @@
+{
+    "name": "Semantic Release",
+    "description": "Composite semantic release template",
+    "iconName": "octicon versions",
+    "categories": [
+        "Continuous Deployment",
+        "npm",
+        "utilities"
+    ]
+}
